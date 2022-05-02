@@ -1,0 +1,37 @@
+---
+# tasks file for mysqldump
+   - name: pip
+     become: true
+     pip:
+       name: pymysql
+       state: present
+ 
+   - name: Check Slave
+     mysql_replication: mode=getslave login_user=root login_password=root
+     register: slave_check
+
+   - name: write
+     debug:
+       msg:
+        - "{{ slave_check.Master_Host }}"
+
+   - name: Check 
+     debug:
+       var: ansible_enp0s8.ipv4.address
+
+   - name: create directory
+     file:
+      path: "{{ backupdir }}_{{ date }}"
+      owner: mysql
+      group: mysql
+      mode: "0775"
+      state: directory
+
+   - name: BACKUP DUMP
+     mysql_db:
+       login_user: root
+       login_password: "{{ mysql_root_password }}"
+       state: dump
+       name: all
+       target: "{{ backupdir }}_{{ date }}/mysqdlump.sql"
+       single_transaction: yes

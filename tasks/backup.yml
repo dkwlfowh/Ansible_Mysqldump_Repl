@@ -1,0 +1,31 @@
+# tasks file for mysqldump
+   - name: pip
+     become: true
+     pip:
+       name: pymysql
+       state: present
+
+   - name: REGISTER IP
+     shell: ip addr | grep "{{ vip }}"
+     register: ip
+     ignore_errors: yes
+
+
+   - name: create directory
+     file:
+      path: "{{ backupdir }}_{{ date }}"
+      owner: mysql
+      group: mysql
+      mode: "0775"
+      state: directory
+     when: ' vip|string in ip.stdout'
+
+   - name: BACKUP DUMP
+     mysql_db:
+       login_user: root
+       login_password: "{{ mysql_root_password }}"
+       state: dump
+       name: all
+       target: "{{ backupdir }}_{{ date }}/mysqdlump.sql"
+       single_transaction: yes
+     when: ' vip|string in ip.stdout'

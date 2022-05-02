@@ -1,0 +1,29 @@
+---
+# tasks file for mysqldump
+   - name: pip
+     become: true
+     pip:
+       name: pymysql
+       state: present
+ 
+   - name: Check Slave
+     mysql_replication: mode=getslave login_user=root login_password=root
+     register: slavecheck
+
+   - name: Check Slave IP ( Master DB Ignore Error ) 
+     debug:
+       msg: "{{ slavecheck.Master_Host }}"
+     ignore_errors: yes
+
+   - name: Check Target Server Ip
+     debug:
+       var: "hostvars[inventory_hostname]['ansible_env'].SSH_CONNECTION.split(' ')[2]"
+     register: lee
+
+   - name: CHECK Register LEE
+     debug: 
+       msg: "{{ lee }}"
+
+   - name: Include VIP in Server IP
+     debug:
+       var: lee.stdout_line[0]
