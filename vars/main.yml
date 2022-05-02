@@ -1,7 +1,4 @@
 ---
 # vars file for mysqldump
-mysql_root_password: root
 basedir: /data/maria
-backupdir: /data/backup
 date: "{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}"
-vip: "192.168.100.123"
