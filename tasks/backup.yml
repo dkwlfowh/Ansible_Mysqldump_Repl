@@ -22,8 +22,8 @@
 
    - name: BACKUP DUMP
      mysql_db:
-       login_user: root
-       login_password: "{{ mysql_root_password }}"
+       login_user: "{{ backup_user }}"
+       login_password: "{{ backup_user_password }}"
        state: dump
        name: all
        target: "{{ backupdir }}_{{ date }}/mysqdlump.sql"
