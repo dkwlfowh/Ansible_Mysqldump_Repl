@@ -25,6 +25,7 @@
        login_user: "{{ backup_user }}"
        login_password: "{{ backup_user_password }}"
        state: dump
+       login_host: "127.0.0.1"
        name: all
        target: "{{ backupdir }}_{{ date }}/mysqdlump.sql"
        single_transaction: yes
